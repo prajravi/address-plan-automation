@@ -1,0 +1,131 @@
+# Site Type Definitions
+# Maps generic site types to their hardware and topology characteristics
+
+site_types:
+  small:
+    description: "Small site - single access stack, no separate core switches"
+    roles:
+      mandatory:
+        - wan_gw
+        - floor_sw
+        - console_server
+        - wireless
+      optional:
+        - lab_gw
+    redundancy:
+      wan: single           # 1x WAN gateway
+      core_sw: none         # No separate core switches
+      console: single       # 1x console server
+    devices:
+      wan_gw:
+        model: "C8300-2N2S-4T2X"
+        description: "WAN Edge Gateway"
+        quantity: 1
+        power:
+          psu_count: 2
+          cable: "CAB-C13-C14-2M"
+        console_port: true
+      floor_sw:
+        model: "C9300X-48HX-A"
+        description: "48-port mGig Access Switch"
+        max_stack: 6
+        ports_per_switch: 48
+        ap_ports_per_switch: 8       # ports 41-48
+        uplink_ports: 2               # 25G SFP+ uplinks
+        power:
+          psu_count: 2
+          cable: "CAB-C13-C14-2M"
+        console_port: true
+      console_server:
+        model: "C8300-1N1S-4T2X"
+        description: "Console/OOB Management Server"
+        quantity: 1
+        power:
+          psu_count: 1
+          cable: "CAB-C13-C14-2M"
+        console_port: true
+      lab_gw:
+        model: "C9500-48Y4C-A"
+        description: "Lab Gateway Switch"
+        quantity: 1
+        power:
+          psu_count: 2
+          cable: "CAB-C13-C14-2M"
+        console_port: true
+      wireless_ap:
+        model: "C9178I-Q-B"
+        description: "Wi-Fi 7 Access Point"
+        power: "PoE+ (25.5W)"
+
+  medium:
+    description: "Medium site - redundant core switches with access layer"
+    roles:
+      mandatory:
+        - wan_gw
+        - core_sw
+        - floor_sw
+        - console_server
+        - wireless
+      optional:
+        - lab_gw
+        - voice_gw
+    redundancy:
+      wan: dual              # 2x WAN gateways
+      core_sw: dual          # 2x core switches
+      console: single        # 1x console server
+    devices:
+      wan_gw:
+        model: "C8300-2N2S-4T2X"
+        description: "WAN Edge Gateway"
+        quantity: 2
+        power:
+          psu_count: 2
+          cable: "CAB-C13-C14-2M"
+        console_port: true
+      core_sw:
+        model: "C9500-48Y4C-A"
+        description: "Core/Distribution Layer Switch"
+        quantity: 2
+        power:
+          psu_count: 2
+          cable: "CAB-C13-C14-2M"
+        console_port: true
+      floor_sw:
+        model: "C9300X-48HX-A"
+        description: "48-port mGig Access Switch"
+        max_stack: 6
+        ports_per_switch: 48
+        ap_ports_per_switch: 8       # ports 41-48
+        uplink_ports: 2               # 25G SFP+ uplinks (dual-homed to both core switches)
+        power:
+          psu_count: 2
+          cable: "CAB-C13-C14-2M"
+        console_port: true
+      console_server:
+        model: "C8300-1N1S-4T2X"
+        description: "Console/OOB Management Server"
+        quantity: 1
+        power:
+          psu_count: 1
+          cable: "CAB-C13-C14-2M"
+        console_port: true
+      lab_gw:
+        model: "C9500-48Y4C-A"
+        description: "Lab Gateway Switch"
+        quantity: 2
+        power:
+          psu_count: 2
+          cable: "CAB-C13-C14-2M"
+        console_port: true
+      voice_gw:
+        model: "C8300-1N1S-4T2X"
+        description: "Voice/Telephony Gateway"
+        quantity: 1
+        power:
+          psu_count: 1
+          cable: "CAB-C13-C14-2M"
+        console_port: true
+      wireless_ap:
+        model: "C9178I-Q-B"
+        description: "Wi-Fi 7 Access Point"
+        power: "PoE+ (25.5W)"

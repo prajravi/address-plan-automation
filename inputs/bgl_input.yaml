@@ -1,0 +1,29 @@
+---
+# Site Input Configuration
+# Fill in site-specific details to generate address plan and patch plan
+
+site: bgl                     # Site identifier string (used in device naming)
+site_description: "Bangalore Office"
+site_type: small              # small | medium
+
+# Network addressing
+# Infra block is used for crosslinks, loopbacks, and VLAN 300 (services)
+# User block is used for VLAN 100 (data), VLAN 200 (guest), VLAN 150 (voice)
+network:
+  infra_block: "10.0.1.0/24"
+  user_block: "10.128.64.0/23"
+  infra_ipv6: "2001:db8:c200:1000::/52"  # IPv6 for crosslinks, loopbacks, services
+  user_ipv6: "2001:db8:a200::/48"        # IPv6 for Data, Voice, Guest VLANs
+
+# Optional services
+services:
+  lab: true                   # Deploy lab gateway
+
+# Floor definitions
+# Each floor has a name and access point count
+floors:
+  - floor: "1"                # Floor identifier (used in naming: site-floor-sw1)
+    ap_count: 11              # Number of wireless APs on this floor
+    switch_stacks:
+      - stack_id: 1
+        members: 3            # Number of switches in the stack

@@ -1,0 +1,39 @@
+---
+# Site Input Configuration
+# Fill in site-specific details to generate address plan and patch plan
+
+site: nyc                     # Site identifier string (used in device naming)
+site_description: "New York Office"
+site_type: medium             # small | medium
+
+# Network addressing
+# Infra block is used for crosslinks, loopbacks, and VLAN 300 (services)
+# User block is used for VLAN 100 (data), VLAN 200 (guest), VLAN 150 (voice)
+network:
+  infra_block: "10.1.2.0/23"
+  user_block: "10.128.96.0/21"
+  infra_ipv6: "2001:db8:c100::/52"    # IPv6 for crosslinks, loopbacks, services
+  user_ipv6: "2001:db8:a100::/48"     # IPv6 for Data, Voice, Guest VLANs
+
+# Optional services (only applicable for medium sites)
+services:
+  lab: true                   # Deploy lab gateway(s)
+  voice: true                 # Deploy voice gateway
+
+# Floor definitions
+# Each floor has a name and access point count
+floors:
+  - floor: "11"               # Floor identifier (used in naming: site-floor-sw1)
+    ap_count: 15              # Number of wireless APs on this floor
+    switch_stacks:
+      - stack_id: 1
+        members: 2
+      - stack_id: 2
+        members: 2
+  - floor: "21"
+    ap_count: 25              # Number of wireless APs on this floor
+    switch_stacks:
+      - stack_id: 1
+        members: 4
+      - stack_id: 2
+        members: 4

@@ -1,0 +1,63 @@
+# VLAN Definitions
+# Generic VLAN assignments for site deployments
+
+vlans:
+  100:
+    name: "Data"
+    description: "Corporate data - wired endpoints"
+    purpose: "user"
+  150:
+    name: "Voice"
+    description: "Voice/telephony traffic"
+    purpose: "user"
+  200:
+    name: "Guest"
+    description: "Guest wireless and wired access"
+    purpose: "user"
+  300:
+    name: "Services"
+    description: "Network services, wireless management, AP registration"
+    purpose: "infrastructure"
+
+# IPv6 Address Scheme
+# Two separate IPv6 prefixes per site:
+#   infra_ipv6: /52 prefix for crosslinks, loopbacks, services VLAN
+#   user_ipv6:  /48 prefix for Data, Voice, Guest VLANs
+#
+# Crosslinks:  /127 subnets carved from infra prefix; 4th hextet mirrors IPv4 offset
+# Loopbacks:   /64 at hextet offset 0x100 from infra prefix base; host = embedded IPv4
+# Services:    /64 at hextet offset 0x111 from infra prefix base
+# User VLANs:  /64 from user prefix; 4th hextet = VLAN ID (decimal)
+#
+# For small sites the infra /52 prefix typically starts at a higher hextet (e.g., :1000::/52)
+# so the resulting loopback subnet becomes :1100::/64 and services :1111::/64.
+# The offset values below are always relative to the infra prefix base address.
+
+ipv6_offsets:
+  # Loopback /64 hextet offset from infra prefix base
+  loopbacks: 0x100
+  # Services VLAN /64 hextet offset from infra prefix base
+  services: 0x111
+  # User VLAN /64 hextet = VLAN ID in decimal (from user prefix)
+  # vlan_100 -> :100::/64, vlan_150 -> :150::/64, vlan_200 -> :200::/64
+
+# Subnet sizing per site type
+subnet_allocation:
+  small:
+    infra_block: "/24"        # Infrastructure subnets
+    user_block: "/23"         # User-facing subnets
+    crosslinks: "/26"         # Point-to-point links
+    loopbacks: "/27"          # Loopback addresses
+    vlan_300: "/25"           # Services VLAN
+    vlan_100: "/24"           # Data VLAN
+    vlan_150: "/26"           # Voice VLAN
+    vlan_200: "/25"           # Guest VLAN
+  medium:
+    infra_block: "/23"        # Infrastructure subnets
+    user_block: "/21"         # User-facing subnets
+    crosslinks: "/25"         # Point-to-point links
+    loopbacks: "/26"          # Loopback addresses
+    vlan_300: "/24"           # Services VLAN
+    vlan_100: "/22"           # Data VLAN
+    vlan_150: "/24"           # Voice VLAN
+    vlan_200: "/23"           # Guest VLAN
