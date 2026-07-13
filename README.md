@@ -1,15 +1,16 @@
-# Address Plan Automation
+# Network Address Plan Automation
 
-Standalone tool that generates a dual-stack (IPv4 + IPv6) CSV address plan defining all IP subnet allocations for a network site deployment.
+Automates dual-stack (IPv4 + IPv6) address-plan generation from shared network topology and site YAML definitions.
 
 ## Folder Structure
 
 ```
-address-plan-automation/
+network-address-plan-automation/
 ├── generate_address_plan.py      # Main script
 ├── config/
 │   ├── vlans.yaml                # VLAN definitions, subnet sizing, IPv6 offsets
-│   └── site_types.yaml           # Device roles, hardware models per site type
+│   ├── site_types.yaml           # Device roles, hardware models per site type
+│   └── connectivity.yaml          # Interfaces and links per site topology
 ├── inputs/
 │   ├── nyc_input.yaml            # Medium site example (New York)
 │   └── bgl_input.yaml            # Small site example (Bangalore)
@@ -19,7 +20,7 @@ address-plan-automation/
 ## Quick Start
 
 ```bash
-cd address-plan-automation
+cd network-address-plan-automation
 python3 generate_address_plan.py inputs/nyc_input.yaml    # Medium site
 python3 generate_address_plan.py inputs/bgl_input.yaml    # Small site
 ```
@@ -33,14 +34,13 @@ Output goes to `output/<site>-address-plan.csv`.
 
 ## What It Produces
 
-The address plan CSV has 7 columns:
+The address plan CSV has 6 columns:
 
 | Column | Content |
 |--------|---------|
 | **Subnet** | Section label (e.g., "nyc VLAN 100 Data") |
 | **IPv4** | IPv4 subnet in CIDR notation |
 | **IPv6** | IPv6 subnet in CIDR notation |
-| *(separator)* | Empty column for visual separation |
 | **DNS** | DNS hostname for the entry |
 | **A** | IPv4 host address (A record) |
 | **AAAA** | IPv6 host address (AAAA record) |
@@ -138,3 +138,19 @@ Two separate IPv6 prefixes per site:
 |------|---------|
 | `config/vlans.yaml` | VLAN definitions, IPv4 subnet sizing per site type, IPv6 hextet offsets |
 | `config/site_types.yaml` | Device roles, hardware models, redundancy levels per site type |
+| `config/connectivity.yaml` | Shared physical topology, endpoint interfaces, and optional-service links |
+
+## Topology Interfaces
+
+Interface mappings are defined in `config/connectivity.yaml`, which is shared with `network-patch-plan-automation`. The address generator uses the role and numeric ID to build site-prefixed names; for example, `wan_gw` with ID `1` becomes `nyc-wan-gw1` for the NYC input.
+
+```yaml
+- from_role: wan_gw
+  from_id: 1
+  from_port: ten0/0/4
+  to_role: core_sw
+  to_id: 1
+  to_port: hun1/0/49
+```
+
+Use `condition: lab_enabled` or `condition: voice_enabled` to include a link only when that service is enabled in the site input. Connections involving `floor_sw` expand once for each floor switch stack configured in the input YAML.

@@ -1,0 +1,298 @@
+# Connectivity Templates
+# Defines the physical connections for each site type
+
+small:
+  # In small sites, WAN gateway connects directly to the access stack (no core switches)
+  connections:
+    - link_id: "wan-to-sw"
+      from_role: "wan_gw"
+      from_id: 1
+      from_port: "ten0/0/4"
+      from_media: "SFP-10Base-SR"
+      to_role: "floor_sw"
+      to_id: 1
+      to_port: "twe1/1/1"
+      to_media: "SFP-10Base-SR"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+
+    - link_id: "wan-to-console"
+      from_role: "wan_gw"
+      from_id: 1
+      from_port: "gig0/0/3"
+      from_media: "GLC-SX-MMD"
+      to_role: "console_server"
+      to_id: 1
+      to_port: "gig0/0/0"
+      to_media: "GLC-SX-MMD"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+
+    - link_id: "wan-to-isp"
+      from_role: "wan_gw"
+      from_id: 1
+      from_port: "gig0/1/0"
+      from_media: "RJ 45"
+      to_role: "ISP"
+      to_id: 1
+      to_port: "tbd"
+      to_media: "RJ 45"
+      cable_type: "copper"
+      cable: "Cat 6A"
+
+    - link_id: "sw-to-lab"
+      from_role: "floor_sw"
+      from_id: 1
+      from_port: "twe1/1/3"
+      from_media: "SFP-10Base-SR"
+      to_role: "lab_gw"
+      to_id: 1
+      to_port: "ten0/0/4"
+      to_media: "SFP-10Base-SR"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+      condition: "lab_enabled"
+
+medium:
+  # In medium sites, dual WAN gateways connect to dual core switches, which connect to everything else
+  connections:
+    # WAN-GW1 to Core switches
+    - link_id: "wan1-to-core1"
+      from_role: "wan_gw"
+      from_id: 1
+      from_port: "ten0/0/4"
+      from_media: "SFP-10Base-SR"
+      to_role: "core_sw"
+      to_id: 1
+      to_port: "hun1/0/49"
+      to_media: "CVR QSFP28 SFP25G"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+
+    - link_id: "wan1-to-core2"
+      from_role: "wan_gw"
+      from_id: 1
+      from_port: "ten0/0/5"
+      from_media: "SFP-10Base-SR"
+      to_role: "core_sw"
+      to_id: 2
+      to_port: "hun1/0/49"
+      to_media: "CVR QSFP28 SFP25G"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+
+    # WAN-GW2 to Core switches
+    - link_id: "wan2-to-core1"
+      from_role: "wan_gw"
+      from_id: 2
+      from_port: "ten0/0/4"
+      from_media: "SFP-10Base-SR"
+      to_role: "core_sw"
+      to_id: 1
+      to_port: "hun1/0/50"
+      to_media: "CVR QSFP28 SFP25G"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+
+    - link_id: "wan2-to-core2"
+      from_role: "wan_gw"
+      from_id: 2
+      from_port: "ten0/0/5"
+      from_media: "SFP-10Base-SR"
+      to_role: "core_sw"
+      to_id: 2
+      to_port: "hun1/0/50"
+      to_media: "CVR QSFP28 SFP25G"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+
+    # WAN cross-connect
+    - link_id: "wan1-to-wan2"
+      from_role: "wan_gw"
+      from_id: 1
+      from_port: "gig0/0/0"
+      from_media: "RJ 45"
+      to_role: "wan_gw"
+      to_id: 2
+      to_port: "gig0/0/0"
+      to_media: "RJ 45"
+      cable_type: "copper"
+      cable: "Cat 6A"
+
+    # WAN uplinks
+    - link_id: "wan1-to-isp"
+      from_role: "wan_gw"
+      from_id: 1
+      from_port: "ten0/1/2"
+      from_media: "SMF"
+      to_role: "ISP"
+      to_id: 1
+      to_port: "tbd"
+      to_media: "SMF"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+
+    - link_id: "wan2-to-isp"
+      from_role: "wan_gw"
+      from_id: 2
+      from_port: "ten0/1/2"
+      from_media: "SMF"
+      to_role: "ISP"
+      to_id: 1
+      to_port: "tbd"
+      to_media: "SMF"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+
+    # Core switch cross-links
+    - link_id: "core1-to-core2-a"
+      from_role: "core_sw"
+      from_id: 1
+      from_port: "twe1/0/3"
+      from_media: "SFP-10/25GBase-CSR"
+      to_role: "core_sw"
+      to_id: 2
+      to_port: "twe1/0/3"
+      to_media: "SFP-10/25GBase-CSR"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+
+    - link_id: "core1-to-core2-b"
+      from_role: "core_sw"
+      from_id: 1
+      from_port: "twe1/0/4"
+      from_media: "SFP-10/25GBase-CSR"
+      to_role: "core_sw"
+      to_id: 2
+      to_port: "twe1/0/4"
+      to_media: "SFP-10/25GBase-CSR"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+
+    # Core to Console Server
+    - link_id: "core1-to-console"
+      from_role: "core_sw"
+      from_id: 1
+      from_port: "twe1/0/15"
+      from_media: "SFP-10Base-SR"
+      to_role: "console_server"
+      to_id: 1
+      to_port: "ten0/0/4"
+      to_media: "SFP-10Base-SR"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+
+    - link_id: "core2-to-console"
+      from_role: "core_sw"
+      from_id: 2
+      from_port: "twe1/0/15"
+      from_media: "SFP-10Base-SR"
+      to_role: "console_server"
+      to_id: 1
+      to_port: "ten0/0/5"
+      to_media: "SFP-10Base-SR"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+
+    # Core to Lab Gateways
+    - link_id: "core1-to-lab1"
+      from_role: "core_sw"
+      from_id: 1
+      from_port: "twe1/0/11"
+      from_media: "SFP-10Base-SR"
+      to_role: "lab_gw"
+      to_id: 1
+      to_port: "ten0/0/0"
+      to_media: "SFP-10Base-SR"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+      condition: "lab_enabled"
+
+    - link_id: "core1-to-lab2"
+      from_role: "core_sw"
+      from_id: 1
+      from_port: "twe1/0/12"
+      from_media: "SFP-10Base-SR"
+      to_role: "lab_gw"
+      to_id: 2
+      to_port: "ten0/0/0"
+      to_media: "SFP-10Base-SR"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+      condition: "lab_enabled"
+
+    - link_id: "core2-to-lab1"
+      from_role: "core_sw"
+      from_id: 2
+      from_port: "twe1/0/11"
+      from_media: "SFP-10Base-SR"
+      to_role: "lab_gw"
+      to_id: 1
+      to_port: "ten0/0/1"
+      to_media: "SFP-10Base-SR"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+      condition: "lab_enabled"
+
+    - link_id: "core2-to-lab2"
+      from_role: "core_sw"
+      from_id: 2
+      from_port: "twe1/0/12"
+      from_media: "SFP-10Base-SR"
+      to_role: "lab_gw"
+      to_id: 2
+      to_port: "ten0/0/1"
+      to_media: "SFP-10Base-SR"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+      condition: "lab_enabled"
+
+    # Lab gateway cross-link
+    - link_id: "lab1-to-lab2"
+      from_role: "lab_gw"
+      from_id: 1
+      from_port: "ten0/0/2"
+      from_media: "SFP-10Base-SR"
+      to_role: "lab_gw"
+      to_id: 2
+      to_port: "ten0/0/2"
+      to_media: "SFP-10Base-SR"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+      condition: "lab_enabled"
+
+    # Core to Voice Gateway
+    - link_id: "core1-to-voice"
+      from_role: "core_sw"
+      from_id: 1
+      from_port: "twe1/0/13"
+      from_media: "SFP-10Base-SR"
+      to_role: "voice_gw"
+      to_id: 1
+      to_port: "ten0/0/4"
+      to_media: "SFP-10Base-SR"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+      condition: "voice_enabled"
+
+    - link_id: "core2-to-voice"
+      from_role: "core_sw"
+      from_id: 2
+      from_port: "twe1/0/13"
+      from_media: "SFP-10Base-SR"
+      to_role: "voice_gw"
+      to_id: 1
+      to_port: "ten0/0/5"
+      to_media: "SFP-10Base-SR"
+      cable_type: "fiber"
+      cable: "OM4 MMF"
+      condition: "voice_enabled"
+
+  # Dynamic switch uplinks - base port on core switches for floor switch connections
+  switch_uplinks:
+    core_base_port: 20       # twe1/0/20, twe1/0/21, etc.
+    sw_member1_port: "twe1/1/1"   # member 1 uplinks to core_sw 1
+    sw_member2_port: "twe2/1/1"   # member 2 uplinks to core_sw 2
+    media: "SFP-10/25GBase-CSR"
+    cable_type: "fiber"
+    cable: "OM4 MMF"
